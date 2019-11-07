@@ -47,7 +47,7 @@
         insertion or false if duplicate entry  */
     public boolean insert(K key, V value)
     {
-
+        //hash the value
     }
 
     /* This function check if the key exists in the table. If yes, true 
