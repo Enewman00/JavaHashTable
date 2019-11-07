@@ -12,7 +12,7 @@
     //create an array of hash entries to represent the hashTable
     HashEntry<K,V> hashtable[];
     int tableSize;
-    float numElements;
+    int numElements;
 
     //TreeNode class for the linked list nodes
     private static class HashEntry<K,V>
@@ -53,7 +53,7 @@
 
     //--------------functions-------------------------------------------------
     
-    /*  This function inserts entry, rehashes if the table is full, throw error
+    /*  TODO This function inserts entry, rehashes if the table is full, throw error
         message if the key is invalid or null and return true upon successful 
         insertion or false if duplicate entry  */
     public boolean insert(K key, V value)
@@ -62,29 +62,28 @@
         int insertAt;
 
         //hash for int
-        if (K instanceof Integer)
-        {
-            insertAt = key.intValue() % tableSize;
-        }
-        //hash for string
-        else
-        {
-
-        }
-
+        insertAt = getHashValue(key);
+        
 
         numElements++;
 
-        //rehash if load factor over .5
-        if (numElements / tableSize >= 0.5)
+        //rehash if full table
+        if (numElements == tableSize)
         {
             rehash();
+        }
+
+
+        //getHashValue returns -1 if duplicate
+        if (insertAt == -1)
+        {
+            return false;
         }
 
         return true;
     }
 
-    /* This function check if the key exists in the table. If yes, true 
+    /* TODO This function check if the key exists in the table. If yes, true 
     value of the key, or null if not found */
     public V find (K key)
     {
@@ -103,6 +102,27 @@
     /* Returns the hash balue for the given key or return -1 if not found */
     public int getHashValue (K key)
     {
+        if (K instanceof Integer)
+        {
+            insertAt = key.intValue() % tableSize;
+        }
+        //hash for string
+        else
+        {
+            //loop through characters, add up ascii values
+            int total = 0;
+            for (int i = 0; i < value.length; i++)
+            {
+
+            }
+        }
+
+
+        //if entry already exists
+        //return -1;
+
+        //if spot is full
+        //linear probing
 
     }
     
