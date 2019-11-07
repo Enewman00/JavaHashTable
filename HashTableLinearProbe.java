@@ -11,6 +11,8 @@
  {
     //create an array of hash entries to represent the hashTable
     HashEntry<K,V> hashtable[];
+    int tableSize;
+    float numElements;
 
     //TreeNode class for the linked list nodes
     private static class HashEntry<K,V>
@@ -32,7 +34,16 @@
     //-------------Constructors-----------------------------------------------
     public HashTableLinearProbe()
     {
-        hashtable = new HashEntry<K,V>[10];
+        numElements = 0;
+        tableSize   = 10;
+        hashtable   = new HashEntry<K,V>[tableSize];
+    }
+
+    public HashTableLinearProbe(int ts)
+    {
+        numElements = 0;
+        tableSize   = ts;
+        hashtable   = new HashEntry<K,V>[tableSize];
     }
 
 
@@ -47,7 +58,30 @@
         insertion or false if duplicate entry  */
     public boolean insert(K key, V value)
     {
-        //hash the value
+        //hash the key
+        int insertAt;
+
+        //hash for int
+        if (K instanceof Integer)
+        {
+            insertAt = key.intValue() % tableSize;
+        }
+        //hash for string
+        else
+        {
+
+        }
+
+
+        numElements++;
+
+        //rehash if load factor over .5
+        if (numElements / tableSize >= 0.5)
+        {
+            rehash();
+        }
+
+        return true;
     }
 
     /* This function check if the key exists in the table. If yes, true 
