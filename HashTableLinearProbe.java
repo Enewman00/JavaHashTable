@@ -7,6 +7,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
  public class HashTableLinearProbe<K,V>
  {
     //create an array of hash entries to represent the hashTable
@@ -21,13 +31,20 @@
         boolean deleted;
         K key;      //key type is generic
         V value;    //value type is generic
-        
+
         //Constructor to create new TreeNodes
         HashEntry()
         {
             deleted = false;
-            K key = null;
-            V value = null;
+            key = null;
+            value = null;
+        }
+
+        HashEntry(K k, V v)
+        {
+            deleted = false;
+            key = k;
+            value = v;
         }
     }
 
@@ -36,14 +53,14 @@
     {
         numElements = 0;
         tableSize   = 10;
-        hashtable   = new HashEntry<K,V>[tableSize];
+        hashtable   = new HashEntry[tableSize];
     }
 
     public HashTableLinearProbe(int ts)
     {
         numElements = 0;
         tableSize   = ts;
-        hashtable   = new HashEntry<K,V>[tableSize];
+        hashtable   = new HashEntry[tableSize];
     }
 
 
@@ -59,13 +76,16 @@
     public boolean insert(K key, V value)
     {
         //hash the key
-        int insertAt;
+        int hashVal;
 
         //hash for int
-        insertAt = getHashValue(key);
-        
+        hashVal = getHashValue(key);
+        hashVal = linearProbe(hashVal); //get the next available spot
 
-        numElements++;
+        //insert in table
+        hashtable[hashVal] = new HashEntry<K, V>(key, value);
+
+        numElements++;  //increase number of elements in table by 1
 
         //rehash if full table
         if (numElements == tableSize)
@@ -73,23 +93,59 @@
             rehash();
         }
 
-
         //getHashValue returns -1 if duplicate
-        if (insertAt == -1)
-        {
-            return false;
-        }
+        // if (hashVal == -1)
+        // {
+        //     return false;
+        // }
 
         return true;
     }
 
-    /* TODO This function check if the key exists in the table. If yes, true 
+    /* This function check if the key exists in the table. If yes, true 
     value of the key, or null if not found */
     public V find (K key)
     {
+        //get index value from hash function
+        int hash = getHashValue(key);
 
+        //loop while still in bounds of table
+        while (hash < tableSize)
+        {
+            //if found, return the value
+            if (hashtable[hash].key == key)
+            {
+                return hashtable[hash].value;
+            }
+            hash++;
+        }
+        
+        //not found
+        return null;
     }
 
+    /*
+     * Looks for an open spot in the hash table, else return -1
+     */
+    private int linearProbe(int hash)
+    {
+        for (int i = hash; i < tableSize; i++)
+        {
+            // if empty spot found, return the hash index
+            if (hashtable[hash] == null)
+            {
+                return hash;
+            }
+            hash++;
+            
+            //if it got to the end of the table, skip back to the beggining
+            if (hash == tableSize)
+            {
+                hash = 0;
+            }
+        }
+        return -1;
+    }
 
     /* Performs lazy deleting by marking the entry as deleted. Return 
     true if deleted , false if it not found in the hashtable */
